@@ -7,6 +7,14 @@
 #include "syscall.h"
 #include "defs.h"
 
+static uint64
+sys_poweroff(void)
+{
+  printf("Powering off...\n");
+  (*(volatile uint32 *) 0x100000) = 0x5555;
+  panic("poweroff");
+}
+
 // Fetch the uint64 at addr from the current process.
 int
 fetchaddr(uint64 addr, uint64 *ip)
@@ -126,6 +134,7 @@ static uint64 (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+[SYS_poweroff]   sys_poweroff,
 };
 
 void
